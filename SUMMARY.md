@@ -5,5 +5,5 @@
 * [😆 1. 객체 설계](README.md)
 * [😆 2. OBJ 객체지향 프로그래밍](object/2.-obj.md)
 * [😆 3. OBJ 역할 책임 협력](object/3.-obj.md)
-* [4. OBJ 설계 품질과 트레이드 오프](object/4.-obj.md)
+* [😄 4. OBJ 설계 품질과 트레이드 오프](object/4.-obj.md)
 * [😆 10. 상속과 코드 재사용](<README (1).md>)
