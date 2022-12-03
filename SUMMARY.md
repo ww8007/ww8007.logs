@@ -9,5 +9,6 @@
 * [😆 5. OBJ 책임 할당하기](object/5.-obj.md)
 * [😆 6. OBJ 메세지와 인터페이스](object/6.-obj.md)
 * [😆 7. OBJ 객체 분해](object/7.-obj.md)
-* [8. OBJ 의존성 관리하기](object/8.-obj.md)
+* [😆 8. OBJ 의존성 관리하기](object/8.-obj.md)
+* [9. OBJ 유연한 설계](object/9.-obj.md)
 * [😆 10. 상속과 코드 재사용](<README (1).md>)
