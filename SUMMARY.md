@@ -12,3 +12,4 @@
 * [😆 8. OBJ 의존성 관리하기](object/8.-obj.md)
 * [😅 9. OBJ 유연한 설계](object/9.-obj.md)
 * [😆 10. 상속과 코드 재사용](<README (1).md>)
+* [😆 11. 합성과 유연한 설계](object/11..md)
