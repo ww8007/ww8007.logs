@@ -1,431 +1,887 @@
-# 😆 10. 상속과 코드 재사용
+# 😆 1. 객체 설계
 
 
 
-## 10.상속과 코드 재사용
+## 1. 객체 설계
 
-### 위키
+💡 이론이 먼저일까? 실무가 먼저일까?
 
-<details>
+> 대부분의 사람들은 이론이 먼저 정립 → 그 뒤를 따라 발전
 
-<summary>결합도</summary>
+* 글래스는 그 반대라고 주장
 
-다른 대상에 대해 알고 있는 지식의 양
+글래스에 따르면 어떤 분야를 막론하고 이론을 정립할 수 없는 초기에는
 
-</details>
+실무가 먼저 급속한 발전을 이룸
 
-> 객체지향 프로그래밍 장점
-
-*   전통적인 패러다임에서 코드를 재사용하는 방법은
-
-    코드를 복사한 후 수정하는 것
-* 객체지향에서 코드를 재사용하기 위해 → 새로운 코드를 추가
-* 객체지향에서 클래스를 재사용하는 전통적인 방법은 새로운 클래스를 추가
-
-🔥 이번 주제는 상속
-
-* 재사용 관점에서 : 상속 클래스 안에서 정의된 인스턴스 변수와 메서드를 자동으로 새로운 클래스에 추가하는 구현 기법
-
-> 객체지향에서 상속 외에도 코드를 효과적으로 재사용할 수 잇는 방법이 한 가지 더 있음
-
-🔥 새로운 클래스의 인스턴스 안에 기존 클래스의 인스턴스를 포함시키는 방법 : 합성
-
-> 코드를 재사용하려는 강력한 동기 → 중복된 코드를 제거하는 욕망
-
-
-
-<table data-view="cards"><thead><tr><th></th><th></th><th></th><th data-type="content-ref"></th><th data-hidden data-card-target data-type="content-ref"></th><th data-hidden data-card-cover data-type="files"></th></tr></thead><tbody><tr><td><h2>My Velog</h2></td><td><mark style="color:yellow;"><code>복순이</code></mark></td><td><a href="https://velog.io/@ww8007">https://velog.io/@ww8007</a></td><td><a href="https://velog.io/@ww8007">https://velog.io/@ww8007</a></td><td><a href="README (1).md">README (1).md</a></td><td><a href=".gitbook/assets/KakaoTalk_Photo_2022-11-20-03-21-36.jpeg">KakaoTalk_Photo_2022-11-20-03-21-36.jpeg</a></td></tr></tbody></table>
-
-## 1. 상속과 중복 코드
-
-> 중복코드 → 의심을 자아냄
-
-### DRY 원칙 (Don’t Repeat Yourself)
-
-> 중복 코드 : 변경을 방해함
-
-* 중복 코드를 제거해야 하는 가장 큰 이유
-
-🔥 프로그램의 본질 - 비즈니스와 관련된 지식을 코드로 변환하는 것 - 이 지식은 항상 변함 - 지식을 표현하는 코드 역시 변경
-
-> 중복 코드가 가지는 가장 큰 문제는 코드를 수정하는 데 필요한 노력 → 몇 배로 증가
-
-*   모든 중복 코드를 개별적으로 테스트해서 → 동일한 결과를 내놓는지 확인해야함
-
-    중복 코드는 수정과 테스트에 드는 비용을 증가시킬뿐만 아니라
-
-    시스템과 → 공황상태
-
-❓ 중복 코드는 어떻게 판단하나요?
-
-> 중복 여부를 판단하는 기준 : 변경을 할 때 다른 코드가 수정되어야 하나?
-
-> 모든 중복 코드를 개별적으로 테스트해서 동일한 결과를 내놓는지 확인해야만 함
-
-* 중복 코드는 수정과 테스트에 드는 비용을 증가시킬뿐만 아니라 → 시스템과 나의 공황상태로 몰아 넣음
-* 신뢰할 수 있고 수정하기 쉬운 소프트웨어를 만드는 효과적인 방법 중 하나 → 중복을 제거
-
-✅ Don’t Repeat Yourself → DRY
-
-* 모든 지식은 시스템 내에서 단일하고, 애매하지 않고, 정말로 믿을 만한 표현 양식을 가져야 한다.
-* 코드 안에서 중복이 존재해서는 안된다
-
-###
-
-### 중복과 변경
-
-#### 중복 코드 살펴보기
-
-> 요구사항은 항상 변한다.
-
-* 구현 시간을 절약한 대가로 지불해야 하는 비용은 예상보다 큼
-* 중복 코드가 존재하는 것은 → 언제 터질지 모르는 시한폭탄을 안고 있는 것과 같음
-* 언젠가 코드를 변경해야 할 때 폭탄의 뇌관이 당겨질지 모름
-
-#### 중복 코드 수정하기
-
-> 새로운 중복 코드를 추가하는 과정 : 코드의 일관성을 무너트리는 위험
-
-* 중복 코드가 늘어날 수록 애플리케이션의 변경에 취약
-* 버그가 발생할 가능성이 높아진다는 것
-* 중복 코드의 양이 많아질수록 버그의 수는 증가
-* 코드를 변경하는 속도는 느려짐
-
-#### 타입 코드 사용하기
-
-> 타입 코드를 사용하는 클래스는 낮은 응집도와 높은 결합도의 문제가 도사림
-
-> 객체지향 프로그래밍 언어는 타입 코드를 사용하지 않고도 중복 코드를 관리할 수 있는 효과적인 방법
-
-* 객체지향 프로그래밍을 대표하는 기법
-
-###
-
-### 상속을 이용해서 중복 코드 제거하기
-
-> 이미 존재하는 클래스와 유사한 클래스가 필요하다면 코드를 복사하지 말고
-
-상속을 이용해서 → 코드를 재사용하는 것
-
-> 실제 코드는 이상과 다름
-
-> 결합도 : 하나의 모듈이 다른 모듈에 대해 얼마나 많은 지식을 갖고 있는지를 나타내는 정도로 정의
-
-상속을 이용해 코드를 재사용하기 위해서는 부모 클래스의 개발자가 세웠던 가정이나
-
-추론 과정을 정확하게 이해하는 것
-
-✅ 상속은 결합도를 높인다. 그리고 상속이 초래하는 부모 클래스와 자식 클래스 사이의 강한 결합이 이 코드를 수정하기 어렵게 만든다.
-
-###
-
-### 강하게 결합된 Phone과 NightlyDiscountPhone
-
-> 부모 클래스와 자식 클래스 사이의 결합이 왜 문제일까?
-
-* 자식 클래스를 만든 이유 : 코드를 재사용 하고, 중복 코드를 재사용 하기 위함임
-* 세금을 부과하는 로직을 추가하기 위해 유사한 코드를 추가해야 했음
-  *   코드 중복을 제거하기 위해 상속을 사용했어도 → 새로운 로직을 추가하기 위해서
-
-      중복 코드를 만들어 내야함
-
-✅ 상속을 위한 경고1
-
-> 자식 클래스 메서드 안에서 super 참조를 이용해 부모 클래스의 메서드를 직접 호출할 경우 두 클래스는 강하게 결합된다. super 호출을 제거할 수 있는 방법을 찾아서 결합도를 제거하라
-
-> 자식 클래스가 부모 클래스의 변경에 취약해지는 현상을 가리켜 취약한 기반 클래스 문제라고 부름 취약한 기반 클래스 문제는 코드 재사용을 목적으로 상속을 사용할 때 발생하는 가장 대표적인 문제임
-
-## 2. 취약한 기반 클래스 문제
-
-> 상속 : 자식 클래스와 부모 클래스의 결합도를 높임
-
-* 강한 결합도로 인해 : 자식 클래스는 부모 클래스의 불필요한 세부사항에 엮이게 됨
-* 부모 클래스 작은 변경 → 자식 클래스는 이에 대한 영향을 크게 받을 수 잇음
-
-> 취약한 기반 클래스 문제
-
-*   상속 → 전체 시스템의 결합도가 높아짐
-
-    *   자식 클래스를 점진적으로 추가해서
-
-        장점 : 기능을 확장하는데는 용이
-
-        단점 : 높은 결합도로 인해 부모 클래스를 점진적 개선이 어려움
-
-    > 최악 : 모든 자식 클래스 동시에 테스트
-
-✅ 객체를 사용하는 이유
-
-> 구현과 관련된 세부사항을 퍼블릭 인터페이스 뒤로 캡슐화가 가능함
-
-* 변경에 의한 파급효과를 제어할 수 있기 때문에 가치가 있음
-* 객체는 변경될지도 모르는 불안정한 요소 → 캡슐화
-* 파급효과를 거정하지 않고도 자유롭게 내부를 변경할 수 있음
-
-✅ 객체지향의 기반은 캡슐화를 통한 변경의 통제
-
-* 상속 : 재사용을 위해 캡슐화의 장점을 희석 시키고 구현에 대한 결합도를 높임
-  * 객체지향이 가진 강력함을 반감
-* 예제를 통해 상속이 가지는 문제점을 구체적
-
-### 불필요한 인터페이스 상속 문제
-
-> java.util.Properties와 java.util.Stack
-
-❄️ Vector를 재사용하기 위해 → Stack을 Vector의 자식 클래스로 구현
-
-> Stack이 Vector
-
-* 자식 클래스로 구현
-
-> Stack이 Vector를 상속받기 때문에
-
-* Stack의 퍼블릭 인터페이스에 Vector의 퍼블릭 인터페이스가 합쳐짐
-* Stack에게 상속된 Vector의 퍼블릭 인터페이스를 이용하면
-* 임의의 위치에서 요소를 추가하거나 삭제가 가능함
-  * 맨 마지막 위치에서만 요소를 추가하거나 제거할 수 있도록 하는
-  * Stack의 규칙을 쉽게 위반 가능함
-
-❓ 단순하게 add 메서드를 안쓰면 되는거 아닌가요?
-
-> 인터페이스 설계는 제대론 쓰기엔 쉽게
+> 실무가 어느 정도 발전하고 난 다음에야 비로소 실무의 실용성을 입증할 수 있는
 >
-> 엉터리로 쓰기에는 어렵게
+> 이론이 ⇒ 그 모습을 갖춰가고
+>
+> 해당 분야가 충분히 성숙해지는 시점 → 이론이 실무를 추월
 
-✅ 상속을 위한 경고 2 상속받은 부모 클래스의 메서드가 자식 클래스의 내부 구조에 대한 규칙을 깨트릴 수 있다.
+### 실무가 이론보다 앞서 있는 것
 
-### 메서드 오버라이딩의 오작용 문제
+> 소프트웨어 설계
 
-✅ 상속을 위한 경고 3 자식 클래스가 부모 클래스의 메서드를 오버라이딩할 경우 부모 클래스가 자신의 메서드를 사용하는 방법에 자식 클래스가 결합될 수 있다.
+> 소프트웨어 유지보수
 
-> 클래스가 상속되기를 원한다면 상속을 위해 클래스를 설계하고 문서화해야 하며 그렇지 않은 경우 → 상속을 금지시켜야 함
+70년대에 들어서야 최초의 이론이 세상에 모습을 드러냄
 
-> 상속이 초래하는 문제점을 보완하면서 코드의 재사용의 장점을 극대화도 가능함
+### 1. 티켓 판매 어플리케이션 구현하기
 
-* 문서화
+> 연극이나 음악회를 공연할 수 있는 작은 소극장 경영을 상상
 
-❓ 근데 내부 구현을 문서화 객체지향의 핵심이 구현을 캡슐화 → 이게 맞는 행동인가?
+* 작은 이벤트를 기획
+* 추첨을 통해 선정된 관람객에게 공연을 무료로 관람할 수 있는 초대장 발송
 
-> 잘된 API 문서는 메서드가 무슨 일(what)을 하는지를 기술해야 하고 어떻게 하는지(how)를 설명해서는 안된다는 통념을 어기는 것이 아닐까?
+> 염두 사항
 
-* 상속 → 캡슐화를 위반함으로써 초래되는 불행
-* 서브클래스가 안전하도록 → 클래스 문서화 → 상세 구현 내역을 캡슐화
+* 이벤트 당첨 고객과 그렇지 못한 관람객 → 다른 방식으로 입장
+* 이벤트 당첨 → 초대장을 티켓으로 교환 후 입장
+* 이벤트 당첨 X → 티켓을 구매해야만 입장 가능
 
-> 설계 : 트레이드오프 활동이라는 사실을 기억
+> 이벤트 당첨자에게 발송되는 초대장을 구현하는 것으로 시작
 
-* 상속 : 코드 재사용을 위해 캡슐화를 희생
-* 완벽한 캡슐화 : 코드 재사용을 포기하거나 상속 이외의 다른 방법을 사용
+* 초대장이라는 개념을 구현한 Invitation은 공연을 관람할 수 있는
+* when을 인스턴스 변수로 포함하는 간단한 클래스
 
-### 부모 클래스와 자식 클래스의 동시 수정 문제
+```java
+public class Invitation {
+	private LocalDateTime when;
+}
+```
 
-> 음악 목록을 추가할 수 있는 플레이리스트
+> 공연을 관람하기 원하는 모든 사람들은 → 티켓을 소지하고 있어야 함
 
-```jsx
-public class Song {
-	private String singer;
-	private String title;
+> Ticket 클래스를 추가
 
-	public Song(String sinter, String title) {
-		this.singer = sinter;
-		this.title = title;
-	}
+```java
+public class Ticket {
+	private Long fee;
 
-	public String getSinger() {
-		return singer;
-	}
-
-	public String getTitle() {
-		return title;
+	public Long getFee() {
+		return fee;
 	}
 }
 ```
 
+* 이벤트 당첨자는 티켓으로 교환할 초대장을 가지고 있을 것임
+* 이벤트에 당첨되지 않은 관람객 → 현금을 보유
+* 관람객이 가지고 올 수 있는 소지품
+  1. 초대장
+  2. 현금
+  3. 티켓
+* 관람객은 소지품을 보관할 용도로 → 가방
+* 관람객이 소지품을 보관할 → Bag 클래스
+
+> Bag 클래스
+
+* 초대장(invitation)
+* 티켓(ticket)
+* 현금(amount)
+
+→ 인스턴스 변수로 포함
+
+> 초대장의 보유 여부를 판단하는 hasInvitation → 메서드
+
+> 티켓의 소유 여부를 판단하는 hasInvitation → 메서드
+
+> 현금을 증가시키거나 감소시키는 plusAmount
+
+> minusAmount
+
+> 초대장을 티켓 교환하는 setTicket 메서드
+
 ```java
-public class Playlist {
-	private List<Song> tracks = new ArrayList<>();
+public class Bag {
+	private Long amount;
+	private Inviation invitation;
+	private Ticket ticket;
+
+	public boolean hasInvitation() {
+		return invitation != null;
+	}
+
+	public boolean hasTicket() {
+		return ticket != null;
+	}
+
+	public void setTicket(Ticket ticket) {
+		this.ticket = ticket;
+	}
+
+	public void minusAmount(Long Amout) {
+		this.amout -= amount;
+	}
 	
-	public void append(Song song) {
-		getTracks().add(song);
+	public void plusAmount(Long amount) {
+		this.amount += amount;
 	}
 }
 ```
 
-> 요구사항이 변경돼서 PlayList에서 노래의 목록뿐만 아닌
->
-> 노래의 제목도 함께 관리해야 한다고 가정
->
-> 노래 추가 → 가수의 이름의 키로 추가
+> 이벤트에 당첨된 가방 안에는 현금과 초대장
 
-> 자식 클래스가 부모 클래스의 메서드를 오버라이딩하거나 불필요한
->
-> 인터페이스를 상속받지 않았음에도 부모 클래스 수정 → 자식 클래스를 함께 수정
->
-> 상속을 사용하면 → 자식 클래스가 부모 클래스의 구현에 강하게 결합
+> 이벤트 당첨 X → 초대장이 들어있지 않음
 
-❓ 결합도 다른 대상에 대해 알고 있는 지식의 양
+* Bag 인스턴스의 상태는 현금과 초대장을 함께 보관하거나
+* 초대장 없이 현금만 보관한는 두 가지 중 하나일 것
 
-> 상속 : 부모 클래스의 구현을 재사용 한다는 기본 전제
-
-* 자식 클래스 : 부모 클래스 내부에 대해 속속들이 알도록 강요함
-* 코드 재사용을 위한 상속 → 수정 사항이 불가피함
-
-✅ 상속을 위한 경고 4 클래스를 상속하면 결합도로 인해 자식 클래스와 부모 클래스의 구현을 영원히 변경하지 않거나, 자식 클래스와 부모 클래스를 동시에 변경하거나 둘 중 하나를 선택할 수밖에 없다.
-
-## 3. Phone 다시 살펴보기
-
-### 추상화에 의존하자
-
-> 부모 클래스와 자식 클래스 → 모두 추상화에 의존하도록
-
-✅ 중복 코드를 제거하기 위해 상속을 도입함
-
-1.  두 메서드가 유사하게 보인다면 차이점을 메서드로 추출하라
-
-    메서드 추출을 통해 두 메서드를 동일한 형태로 보이도록 만들 수 있음
-2.  부모 클래스의 코드를 하위로 내리지 말고 → 자식 클래스의 코드를 상위로 올려라
-
-    구체적인 메서드를 자식 클래스로 내리는 것보다 자식 클래스의 추상적인 메서드를
-
-    부모 클래스로 올리는 것이 재사용성과 응집도 측면에서 뛰어난 결과
-
-### 차이를 메서드로 추출하라
-
-> 변하는 것으로부터 변하지 않는 것을 분리하라
-
-> 변하는 부분을 찾고 이를 캡슐화하라
-
-✅ 비슷 하지만 다른 점 찾기
-
-* [ ] for 문 안에 구현된 요금 계산 로직이 다름
+Bag 인스턴스를 생성하는 시점에 이 제약을 강제할 수 있도록 생성자를 추가
 
 ```java
-private Money calculateCallFee(Call call) {
-	return amount.times(call.getDuration().getSeconds() / second.getSecons());
-}
-```
+public class Bag{
+	public Bag(long amount) {
+		this(null, amount);
+	}
 
-```java
-private Money calculateCallFee(Call call) {
-	if (call.getFrom().getHour() >= LATE_NIGHT_HOUR) {
-		return nightlyAmount.times(call.getDuration().getSeconds() / seconds.getSeconds();
-	} else {
-		return regularAmount.times(call.getDuration().getSeconds() / seconds.getSeconds();
+	public Bag(Invitation invitation, long amount) {
+		this.invitation = invitation;
+		this.amount = amount;
 	}
 }
 ```
 
-> 두 클래스의 메서드는 완전히 동일해졌고
->
-> 추출한 calculateCallFee 메서드 안에 서로 다른 부분을 격리해 두었음
+> 다음은 관람객이라는 개념을 구현하는 Audience 클래스를 만들 차례
 
-* [ ] 같은 코드를 부모 클래스로 올리자!
-
-### 중복 코드를 부모 클래스로 올려라
-
-> 부모 클래스를 추가하자
-
-* 목표 : 모든 클래스들이 추상화에 의존하도록 만드는 것임
-* 이 클래스는 추상 클래스로 구현하는 것이 적합
-  *   새로운 부모 클래스의 이름 : AbstractPhone으로 하고
-
-      Phone, NightlyDiscountPhone이 AbstractPhone을 상속받도록 수정
+관람객은 소지품을 보관하기 위해 가방을 소지 가능함
 
 ```java
-public abstract class AbstractPhone {}
+public class Audience {
+	private Bag bag;
+	
+	public Audience(Bag bag) {
+		this.bag = bag;
+	}
 
-public class Phone extends AbstractPhone { ... }
-
-public class NightlyDiscountPhone extends AbstractPhone { ... }
+	public Bag getBag() {
+		return bag;
+	}
+}
 ```
 
-> 자식 클래스들 사이의 공통점을 부모 클래스 → 실제 코드를 기반으로 상속 계층
-
-* 우리의 설계 : 추상화에 의존
-
-❓ 위로 올리기의 장점은 무엇인가요?
-
-> 문제는 쉽게 찾을 수 있고 쉽게 고칠 수 있음
-
-*   추상화하지 않고 → 빼먹은 코드가 있더라도
-
-    하위 클래스가 해당 행동을 필요할 때가 오면 → 이 문제는 바로 눈에 띔
-*   모든 하위 클래스가 이 행동을 할 수 있께 만들려면
-
-    중복 코드 양산, 위로 올리기
-
-> 구체적인 구현을 아래로 내리는 방식을 사용하면
-
-*   현재 클래스를 구체 클래스 → 추상 클래스로 변경하려는 순간
-
-    작은 실수 한 번으로도 구체적인 행동을 상위 클래스에 남겨 놓음
-
-### 추상화가 핵심이다
-
-> 공통 코드를 이동 → 각 클래스는 서로 다른 변경의 이유를 가짐
-
-* [x] 클래스가 각각 하나의 변경의 이유만을 가지도록
-  * 단일 책임 원칙 준수 → 응집도가 높음
-
-> 구체적인 구현에 의존 하지 않고 → 추상화에 의존
-
-❓ 사실 부모 클래스 역시 내부에 구현된 추상 메서드를 호출하기 때문에 추상화에 의존한다고 말할 수 있음 의존성 역전 원칙도 준수
-
-> 상위 수준의 정책을 구현하는 세부적인 구현 로직이 추상화에 의존
-
-❓ 상위 계층이 코드를 진화시키는 데 걸림돌이 된다면 1. 추상화를 찾아내고 2. 상속 계층 안의 클래스들이 그 추상화에 의존하도록
-
-> 차이점을 메서드로 추출하고 공통적인 부분 : 부모 클래스로 이동
-
-### 의도를 드러내는 이름 선택하기
-
-> 내용을 명시적으로 전달하지 못함
-
-> 클래스라는 도구
-
-* 메서드뿐만 아닌 인스턴스 변수도 함께 포함
-*   클래스 사이의 상속 : 자식 클래스가 부모 클래스가 구현한 행동뿐만이 아니라
-
-    인스턴스 변수에 대해서도 결합되게 만듬
-
-> 인스턴스 변수의 목록이 변하지 않는 상황에서
-
-* 객체의 행동만 변경된다면 상속 계층에 속한 각 클래스들을 독립적으로 진화 가능
-
-❓ 인스턴스 변수가 추가되면요?
-
-> 자식 클래스 → 부모 클래스에 추가된 변수 → 자식 클래스 초기화에 영향을 미침
-
-* 책임을 아무리 잘 분리해도 → 인스턴스 변수의 추가는 상속 계층 전반에 걸친 변경을 유발함
-
-❄️ 이는 React Props 전달에 연결하는 점과 동일하다고 바라봐야 하나?⚠️ 객체 생성 로직을 막기보다는 핵심 로직의 중복을 막아라
-
-> 핵심 로직은 한 곳에 모아두고 조심스럽게 캡슐화
+> 관람객이 소극장에 입장하기 위해서 → 매표소에서 초대장을 티켓으로 교환하거나 구매
 >
-> 공통적인 핵심 로직 : 최대한 추상화
+> 따라서 매표소에는 관람객에게 판매할 티켓과 티켓의 판매 금액이 보관
+>
+> 매표소를 규현하기 위해 → TicketOffice 클래스를 추가
+>
+> TicketOffice는 판매하거나 교환해 줄 티켓을 목록(ticket)와
+>
+> 판매 금액(amount)을 인스턴스 변수로 포함함
 
-## 4. 차이에 의한 프로그래밍
+* 티켓을 판매하는 getTicket 메서드는 편의를 위해
+* tickets 컬렉션에 맨 첫 번째 위치에 저장된 Ticket을 반환하는 것으로 구현
+* 또한 판매 금액을 더하거나 빼는 plusAmount, minusAmount도 함께 구현
 
-> 상속 : 기존 코드와 다른 부분만 추가 → 차이에 의한 프로그래밍
+```java
+public class TicketOffice {
+	private Long amount;
+	private List<Ticket> tickets = new ArrayList<>();
+	
+	public TicketOffice(Long amount, Ticket ... tickets) {
+		this.amount = amount;
+		this.tickets.addAll(Arrays.asList(tickets));
+	}
 
-*   상속을 이용 → 이미 존재하는 클래스의 코드를 쉽게 재사용
+	public Ticket getTicket() {
+		return tickets.remove(0);
+	}
 
-    애플리케이션의 점진적인 정의(increamental definition)
+	public void minusAmount(Long amount) {
+		this.amount -= amount;
+	}
 
-> 차이에 의한 프로그래밍의 목표
+	public void plusAmount(Long amount) {
+		this.amount += amount;
+	}
+}
+```
 
-* [ ] 중복 코드를 제거
-* [ ] 코드를 재사용
+> 판매원은 매표소에 초대장 티켓으로 교환해 주거나 티켓을 판매하는 역할을 수행
+>
+> 판매원을 구현한 TicketSeller 클래스는 자신이 일하는 매표소(ticketOffice)를 알고 있어야 함
 
-> 이는 동일한 행동을 가리키는 서로 다른 언어
+```java
+public class TicketSeller {
+	private TicketOffice ticketOffice;
 
-⚠️ 중복을 제거하기 위해서는 1. 코드를 재사용 가능한 단위로 분해하고 2. 재구성❓ 단순하게 문자를 타이핑 하는 수고만 줄이는 것인가요?
+	public TicketSeller(TicketOffice ticketOffice) {
+		this.ticketOffice = ticketOffice;
+	}
+	public TicketOffice getTicketOffice() {
+		return ticketOffice;
+	}
+}
+```
 
-> 재사용 가능한 코드 : 심각한 버그가 존재하지 않는 코드
+> 소극장을 구현하는 클래스 → Theater
+>
+> Theater 클래스가 관람객을 맞일할 수 있도록 enter 메서드 구현
 
-*   따라서 코드를 재사용하면 코드의 품질은 유사하면서도
+```java
+public class Theater {
+    private TicketSeller ticketSeller {
+        this.ticketSeller = ticketSeller;
+    }
 
-    코드를 작성하는 노력과 테스트는 줄일 수 있음
+    public void enter(Audience audience) {
+        if (audience.getBag().hasInvitation()) {
+            Ticket ticket = ticketSeller.getTicketOffice().getTicket();
+            audience.getBag().setTicket(ticket);
+        } else {
+          Ticket ticket = ticketSeller.getTicketOffice().getTicket();
+          audience.getBag().minusAmount(ticket.getFee());
+          ticketSeller.getTicketOffice().plusAmount(ticket.getFee());
+          audience.getBag().setTicket().setTicket(ticket);
+        }
+    }
+}
+```
 
-❄️ 상속은 양날의 검이다. 상속의 오용과 남용은 애플리케이션을 이해하고 확장하기 어렵게 만든다. 정말로 필요한 경우에만 상속을 이용하다.
+1. 소극장은 먼저 관람객의 가방 안에 초대장이 들었는지 확인
+2. 만약 초대장이 들어 있따면 → 이벤트에 당첨 → 가방안에 티켓을 넣어줌
+3. 가방안에 티켓이 없다면 티켓을 판매
+4. 소극장의 관람객의 가방안에서 티켓 금액만큼 금액을 차감한 후 → 매표소 금액 증가
+5. 관람객의 가방 안에 티켓 → 관람객의 입장 절차를 끝냄
 
-> 합성 : 상속의 단점을 피하면서도 코드를 재사용하는 방법
+### 2. 무엇이 문제인가?
+
+> 로버트 마틴은 소프트웨어 모듈이 가져야 하는 세 가지 기능
+
+> 모듈 : 크기와 상관 없이 클래스나 패키지, 라이브러리와 같이 프로그램을 구성하는 임의의 요소
+
+* 모든 소프트웨어 모듈에는 세 가지 목적
+
+1. 실행 중에 제대로 동작
+   * 이것은 모든 모듈의 존재 이유
+2. 변경을 위해 존재
+   * 대부분의 모듈은 생명주기 동안 변경 → 간단한 작업만으로 변경이 가능해야 함
+   * 변경하기 어려운 모듈은 제대로 동작하더라도 → 개선
+3. 코드를 읽는 사람과 의사소통
+   * 모듈은 특별한 훈련 없이도 개발자가 쉽게 이해하고 읽을 수 있어야함
+   * 읽는 사람과 소통할 수 없는 모듈은 개선
+
+#### 예상을 빗나가는 코드
+
+> 소극장은 → 관람객의 가방을 열어 → 초대장이 들어있는지 확인
+>
+> 가방안에 초대장이 들었다면 → 판매원은 매표소에 보관돼 있는 티켓을 → 관람객의 가방 안으로 옮김
+>
+> 가방 안에 초대장이 들어 있지 않다면 → 가방에서 티켓 금액만큼 현금 꺼내 → 매표소에 적립
+>
+> 보관돼 있는 티켓을 가방 안으로 옮김
+
+> 관람객과 판매원이 소극장의 통제를 받는 수동적인 존재
+
+* 누군가 허락없이 내 가방을 뒤진다면 → 이를 두고 봄?
+
+> 판매원도 동일한 상황
+
+* 소극장이 허락도 없이 → 티켓과 현금에 접근이 가능함
+
+> 이해 가능한 코드 → 우리의 예상을 크게 벗어나지 않는 코드
+
+#### 또 다른 이유
+
+> 여러 가지 세부적인 내용들을 한번에 기억해야 함
+
+* enter 메서드를 이해하기 위해
+  * Aundience가 Bag을 가지고 있고
+  * Bag 안에는 현금과 티켓이 들어 있으며
+  * TicketSeller가 TicketOffice에서 티켓을 판매하고
+  * TicketOffice 안에 돈과 티켓이 보관되어 있음
+
+> 이 모든 사실을 기억이 가능함?
+
+#### 가장 큰 문제
+
+> Audience, TicketSeller를 변경할 경우 → Theater도 함께 변경해야 함
+
+### 변경에 취약한 코드
+
+> 더 큰 문제는 → 변경에 취약하는 점
+
+* 이 코드는 관람객이 현금과 초대장을 보관하기 위해 → 항상 가방을 들고 다니는 점
+* 또한 판매원이 매표소 에서만 → 티켓을 판매하고 있다고 가정
+* 관람객이 현금이 아닌 → 신용카드를 들고다면?
+* 판매원이 매표소 밖에서 티켓을 판매 한다면?
+
+> 이는 객체 사이의 의존성(dependency)에 관한 문제
+
+문제는 의존성이 변경과 관련돼 있다는 점임
+
+의존성은 변경에 대한 영향을 암시함
+
+`의존성이라는 말 속에는 어떤 객체가 변경될 때 → 그 객체에 의존하는 다른 객체도 변경 가능함`
+
+> 그렇다고 해서 객체 사이의 의존성을 완전히 없애는 것이 정답은 아님
+
+객체지향 설계는 서로 의존하면서 협력하는 객체들의 공동체를 구축하는 것
+
+따라서 우리의 목표는 애플리케이션의 기능을 구현하는 데 필요한 최소한의
+
+의존성 만을 유지하고 → 불필요한 의존성을 제거한느 것
+
+> 객체 사이의 의존성이 과한 경우 → `결합도(coupling)가 높다고 함`
+
+> 반대로 객체들이 합리적인 수준으로 의존 → 결합도가 낮다
+
+결합도는 의존성과 관련 → 결합도 역시 변경과 관련
+
+두 객체 사이의 결합도가 높으면 높을수록 → 함께 변경될 확률도 높아짐
+
+변경이 어려워짐
+
+따라서 설계의 목표는 객체 사이의 결합도를 낮춰 변경이 용이한 설계를 만드는 것
+
+### 설계 개선하기
+
+예제 코드는 로버트 마틴이 이야기한 세가지 목적 중 한가지는 만족시키지만
+
+다른 두 조건은 만족시키지 못함
+
+> 변경과 의사소통이라는 문제가 서로 엮여 있다는 점에
+
+코드를 이해하기 어려운 이유는 Theater가 관람객의 가방과 판매원의 매표소에 직접 접근
+
+이것은 관람객과 판매원이 자신의 일을 스스로 처리해야한다.
+
+> 이것은 관람객과 판매원이 자신의 일은 스스로 처리해야 한다는
+>
+> 직관에서 벗어남
+
+* 의도를 정확하게 의사소통하지 못하기 때문에 소통이 어려워진 것
+* Theatter가 관람객의 가방과 배표소에 직접 접근한다
+  * Theater가 Audience와 TicketSeller에 결합된다는 것을 의미함
+  * 따라서 Audince 변경 사항이 생기면 모든 코드 변경 → 비효율적
+
+> 해결 방법은 간단
+
+* Theater가 Audience, TicketSeller에 관해 너무 세세한 부분까지 알지 못하도록 정보를 차단
+  *   관람객이 가방을 가지고 있다는 사실을 매표소에서 티켓을 판매 한다는 사실을
+
+      Theater가 알아야 할 필요가 없음
+*   Theater가 원하는 것은 관람객이 소극장에 입장하는 것뿐임
+
+    따라서 관람객이 스스로 가방 안의 현금과 초대장을 처리하고
+
+    판매원이 스스로 매표소의 티켓과 판매 요금을 다루면
+
+    모든 문제를 한 번에 해결할 수 있음
+
+> 관람객과 판매원을 → 자율적인 존재로
+
+### 자율성을 높이자
+
+> 설계를 변경하기 어려운 이유
+
+Theater가 Audience와 TicketSeller뿐만 아니라
+
+Audience 소유의 Bag과 TicketSleer가 근무하는 TicketOffice까지 마음대로 접근 가능
+
+> 해결 방법
+
+Audience와 TicketSeller가 직접 Bag과 TicketOffice를 처리하는 자율적인 존재가 되도록
+
+설계를 변경하는 것
+
+> 첫 번째 단계
+
+Theater의 enter 메서드에서 TicketOffice에 접근하는 모든 코드를
+
+TicketSeller 내부로 숨기는 것
+
+TicketSeller에 sellTo 메서드를 추가하고 Teater에 있던 로직을 이 메서드로 이동
+
+```java
+public class Theater {
+	private TicketSeller ticketSeller;
+
+	public Theater(TicketSeller ticketSeller) {
+		this.ticketSeller = ticketSeller;
+	}
+
+	public void enter(Audience audince) {
+		if (audience.getBag().hasInvitation() {
+			Ticket ticket = ticketSeller.getTikcetOffice().getTicket();
+			audience.getBag().setTicket(ticket);
+		} else {
+			Ticket ticket = ticketSeller.getTicketOffice().getTicket();
+			audience.getBag().minusAmount(ticket.getFee());
+			ticketSeller.getTicketOffice().plusAmount(ticket.getFee());
+			audience.getBag().setTicket(ticket);
+		}
+	}
+}
+
+public class TicketSeller {
+	private TicketOffice ticketOffice;
+
+	public TicketSeller(TicketOffice ticketOffice) {
+		this.ticketOffice = ticketOffice;
+	}
+
+	public void sellTo(Audience audience) {
+		if (audience.getBag().hasInvitation() {
+			Ticket ticket = ticketSeller.getTikcetOffice().getTicket();
+			audience.getBag().setTicket(ticket);
+		} else {
+			Ticket ticket = ticketSeller.getTicketOffice().getTicket();
+			audience.getBag().minusAmount(ticket.getFee());
+			ticketSeller.getTicketOffice().plusAmount(ticket.getFee());
+			audience.getBag().setTicket(ticket);
+		}
+	}
+}
+```
+
+> 다음은 sellTo 메서드를 추가한 후의 TicketSeller 클래스를 나타낸 것
+
+```java
+public class TicketSeller {
+	private TicketOffice ticketOffice;
+
+	public TicketSeller(TicketOffice ticketOffice) {
+		this.ticketOffice = ticketOffice;
+	}
+
+	public void sellTo(Audience audience) {
+		if (audience.getBag().hasInvitation() {
+			Ticket ticket = ticketSeller.getTikcetOffice().getTicket();
+			audience.getBag().setTicket(ticket);
+		} else {
+			Ticket ticket = ticketSeller.getTicketOffice().getTicket();
+			audience.getBag().minusAmount(ticket.getFee());
+			ticketSeller.getTicketOffice().plusAmount(ticket.getFee());
+			audience.getBag().setTicket(ticket);
+		}
+	}
+}
+```
+
+TicketSeller에서 getTicketOffice 메서드가 제거됐다는 사실에 주목
+
+ticketOffice의 가시성이 private이고 접근 가능한 퍼블릭 메서드가 더 이상 존재하지 않기 때문에
+
+외부에서는 ticketOffice에 직접 접근할 수 없음
+
+결과적으로 ticketOffice에 대한 접근은 오직 TicketSeller 안에만 존재하게 됨
+
+따라서 TicketSeller는 ticketOffice에서 티켓을 꺼내거나 판매 요금을 적립하는 일을 스스로
+
+수행할 수밖에 없음
+
+> 이처럼 개념적으로 물리적으로 객체 내부의 세부적인 사항을 감추는 것
+>
+> 캡슐화(encapsulation)라고 부름
+
+* 캡슐화의 목적은 변경하기 쉬운 객체를 만드는 것
+  * 캡슐화를 통해 객체 내부로의 접근을 제한하면
+  * 객체와 객체 사이의 결합도를 낮출 수 있기 때문에
+  * 설계를 좀 더 쉽게 변경할 수 있게됨
+
+```java
+public class Theater {
+	private TicketSeller ticketSeller;
+	
+	public Theater(TicketSeller ticketSeller) {
+		this.ticketSeller = ticketSeller;
+	}
+
+	public void enter(Audience audience) {
+		ticketSelle.sellTo(audience);
+	}
+}
+```
+
+* 수정된 Theater 클래스 어디서도 ticketOffice에 접근하지 않다는 사실에 주목
+  * Theater는 ticketOffice가 TicketSeller 내부에 존재한다는 사실을 알지 못함
+  * Theater는 단지 ticketSeller가 sellTo 메시지를 이해하고 응답할 수 있다는 사실만
+* Theater는 오직 TicketSeller는 인터페이스(interface)에만 의존함
+* TicketSeller가 내부에 TicketOffice 인스턴스를 포함하고 있다는 사실은
+  * 구현의 영역에 속함
+* 객체를 인터페이스의 구현으로 나누고
+  * 인터페이스만을 공개하는 것은 객체 사이의 결합도를 낮추고 변경하기 쉬운 코드를 작성
+* 쉬운 코드를 작성하기 위해서 따라야 하는 가장 기본적인 설계 원칙
+
+> Theater의 로직을 TicketSeller로 이동시킨 결과
+
+Theater에서 TicketOffice로의 의존성이 제거됐따는 사실을 알 수 있음
+
+TicketOffice와 협력하는 TicketSeller의 내부 구현이 성공적으로 캡슐화
+
+> TicketSeller 다음으로 Audience의 캡슐화를 개선
+
+TicketSeller는 Audience의 getBag 메서드를 호출해서
+
+Audience 내부의 Bag 인스턴스에 직접 접근
+
+Bag 인스턴스에 접근하는 객체가 Theater에서 TicketSeller로 바뀌었을 뿐
+
+Audience는 여전히 자율적인 존재가 아닌 것
+
+> TicketSeller와 동일한 방법으로 Audience의 캡슐화를 개선할 수 있음
+
+Bag에 접근하는 모든 로직을 Audience 내부로 감추기 위해
+
+Audience에 buy 메서드를 추가하고 TicketSeller의 sellTo 메서드에서
+
+getBag 메서드에 접근하는 부분을 buy 메서드로 옮기나
+
+```java
+public class Audience {
+	private Bag bag;
+	
+	public Audience(Bag bag) {
+		this.bag = bag;
+	}
+
+	public Long by(Ticket ticket) {
+		if (bag.hasInvitation() {
+			bag.setTicket(ticket);
+			return OL;
+		} else {
+			bag.setTicket(ticket);
+			bag.minusAmount(ticket.getFee());
+			return ticket.getFee();
+		}
+	}
+}
+```
+
+* 변경된 코드에서 Audience는 자신의 가방 안에 초대장이 들어있는지를 스스로 확인
+* 외부의 3자는 자신의 가방을 열어보도록 허용하지 않음
+  * Audience가 Bag을 직접 처리하기 때문에
+  * 외부에서는 더 이상 Audience가 Bag을 소유하고 있다는 사실을 알 필요가 없음
+* Audience 클래스에서 getBag 메서드를 제거할 수 있고
+* 결과적으로 Bag의 존재를 내부로 캡슐화 가능함
+
+> TicketSeller가 Audience의 인터페이스에만 의존하도록 수정
+
+TicketSeller가 buy 메서드를 호출하도록 코드를 변경
+
+```java
+public class TicketSeller {
+	private TicketOffice ticketOffice;
+
+	public TicketSeller(TicketOffice tikcetOffice {
+		this.ticketOffice = ticketOffice;
+	}
+
+	public void sellTo(Audience audience) {
+		ticketOffice.plusAmount(audience.buy(ticketOffice.getTicket()));
+	}
+}
+```
+
+> 코드를 수정한 결과 TicketSeller와 Audience 사이의 결합도가 낮아짐
+
+또한 내부 구현이 캡슐화됐으므로 Audience의 구현을 수정하더라도 TicketSeller에 영향을 미치지 않음
+
+### 무엇이 개선됐는가?
+
+> 수정된 예제 역시 필요한 기능을 오류 없이 수행함
+
+* 동작을 수행해야 한다는 첫 번째 목적을 만족
+
+💡 그러면 변경 용이성과 의사소통?
+
+> 각각의 소지품을 스스로 관리
+>
+> → 우리의 예상과 정확한 일치
+>
+> 코드를 읽는 사람의 의사소통이라는 관점에서 이 코드는 확실히 개선
+
+💡 더 중요한 점
+
+> Audience나 TicketSeller의 내부 구현을 변경하더라도
+>
+> Theater를 함께 변경할 필요가 없어졌다는 것
+>
+> Audience가 가방이 아닌 → 작은 지갑?
+>
+> 내부만 변경하면 됨
+
+### 어떻게 한 것인가?
+
+* 판매자가 티켓을 판매하기 위해 → TicketOffice를 사용하는 부분
+  * TicketSeller 내부로 옮기고
+* 관람객이 티켓을 구매하기 위해 Bag 사용하는 모든 부분
+  * Audience 내부로 옮긴 것
+* 다시 말해 자기 자신의 문제를 스스로 해결하도록 코드를 변경한 것
+  * 우리는 우리의 직관을 따랐고 그 결과로 코드는 변경이 용이하고 이해 가능하도록
+* 수정하기 전의 코드와 수정한 후의 코드를 한 번 비교
+
+> 수정 후
+
+*   Theater는 Audience나 TicketSeller의 내부에 직접 접근하지 않음
+
+    Audience는 Bag 내부의 내용물을 확인하거나, 추가하거나, 제거하는 작업을 스스로 처리하며
+
+    외부의 누군가에게 자신의 가방을 열어보도록 허용하지 않음
+* TicketSeller 역시 매표소에 보관된 티켓을 직접 판매하도록 바뀜
+  * 수정된 TicketSeller는 다른 누군가가 매표소 안을 마음대로 휘젓지 않도록
+
+> 우리는 개체의 자율성을 높이는 방향으로 설계
+
+### 캡슐화와 응집도
+
+> 핵심은 객체 내부 상태를 캡슐화하고 객체 간에 오직 메시지를 통해서만 상호작용하도록 만드는 것
+
+> Theater는 TicketSeller의 내부에 대해서는 전혀 알지 못함
+
+* 단지 TicketSeller가 sellTo 메시지를 이해하고 응답할 수 있다는 사실만 알고 있음
+
+> 자신이 원하는 응답값을 받을 수 있다는 확신
+
+> 밀접하게 연관된 작업만을 수행하고
+>
+> 연관성 없는 작업은 다른 객체에게 위임하는 객체
+
+→ 응집도가 높다
+
+* 자신의 데이터를 스스로 처리하는 자율적인 객체를 만들면
+  * 결합도를 낮추고 → 응집도를 높일 수 있음
+
+> 객체의 응집도를 높이다
+
+* 객체 스스로 자신의 데이터를 책임져야함
+* 자신이 소유하고 있지않은 데이터를 이용해
+  * 작업을 처리하는 객체에게 어떻게 연관성 높은 작업들을 할당할 수 있겠는가?
+* 객체는 자신의 데이터를 스스로 처리하는 자율적인 존재
+  * 그것이 객체의 응집도를 높이는 첫걸음
+  * 외부의 간섭을 최대한 배제하고
+  * 메시지를 통해서만 협력하는 자율적인 객체들의 공동체
+  * 휼륭한 객체 지향 설계
+
+💡 외부의 간섭을 최대한 배제하고 메시지를 통해서만 협력하는 자율적인 객체들의 공동체 휼륭한 객체지향 설계
+
+### 절차지향과 객체 지향
+
+> 절차적 프로그래밍(Procedural Programming)
+
+프로세스와 데이터를 별도의 모듈에 위치시키는 방식
+
+*   모든 처리가 하나의 클래스 안에 위치하고
+
+    다른 클래스들은 단지 데이터의 역할만 수행함
+
+⚠️ 문제점
+
+절차적 프로그래밍 세상에서는 데이터의 변경으로 인한 영향을
+
+지역적으로 고립시키기 어려움
+
+> 내부 구현을 변경시 → 다른 메서드도 함께 변경해야함
+
+> 변경 → 버그 → 두려움 → 코드 변경하기 어렵게
+
+* 절차적 프로그래밍의 세상은 변경하기 어려운 코드를 양산
+
+💡 변경하기 쉬운 설계
+
+> 한 번에 하나의 클래스만 변경할 수 있는 설계
+
+💡 객체지향 프로그래밍
+
+* 데이터와 프로세스가 동일한 모듈 내부에 위치하도록 프로그래밍
+  * 메서드 : 프로세스
+  * 데이터
+
+> 휼륭한 객체지향 설계의 핵심
+
+* 캡슐화를 이용해 의존성을 적절히 관리
+  * 객체 사이의 결합도를 낮추는 것
+* 객체지향 > 절자지향 (유연)
+* 객체지향 코드는 자신의 문제를 스스로 처리해야 한다는 우리의 예상을 만족
+  * 객체 내부의 변경이 객체 외부에 파급되지 않도록
+  * 제어할 수 있기 때문에 변경하기 수월함
+
+### 책임의 의동
+
+* 두 방식의 근복적인 차이
+
+`책임의 이동(shift of responsibility)`
+
+> 책임 : 기능을 가리키는 개체지향 세계의 용어로 생각해도 무방
+
+#### 두 방식의 차이점을 가장 쉽게 이해할 수 있는 방법
+
+* 기능을 처리하는 방법을 살펴보는 것
+* 절차지향
+  * 책임이 Theater에 집중
+* 객체지향
+  * 책임이 분산되서 이동
+
+> 각 객체는 자신을 스스로 책임짐
+
+> 이런관점에서 객체지향 프로그래밍
+
+* 흔히 데이터와 프로세스를 하나의 단위로 통합해 놓는 방식으로 표현
+  * 구현 관점에서만 바라본 지극히 편협한 사실
+  * 하지만 입문자에게 실용적인 조언
+* 코드에서 데이터와 데이터를 사용하는 프로세스가 → 별도의 객체에 위치
+  * 절차적 프로그래밍 방식을 따르고 있을 확률이 높음
+* 객체지향 안에는 단순히 데이터와 프로세스를 하나로 묶는 것 이상
+  * 사실 객체지향 설계의 핵심은 절절한 객체에 적절한 책임을 할당
+
+> 객체지향 설계의 핵심은
+
+* `객체는 다른 객체와의 협력이라는 문맥 안에서 특정한 책임을 할당하는 것`
+* 객체가 어떤 데이터를 가지냐 보다 → 어떤 책임을 할당할 것인가?
+
+> 설계를 어렵게 만드는 것
+
+* 의존성이라는 것을 기억
+* 해결 방법은 불필요한 의존성을 제거 → 객체 사이의 결합도를 낮추는 것
+* 몰라도 되는 세부사항을 객체 내부로 캡슐화
+  * 객체의 자율성을 높이고
+  * 응집도 높은 객체들의 공동체를 창조
+* 불필요한 세부사항을 캡슐화 하는 자율적인 객체들이 낮은 결합도와 높은 응집도를 가지고 협력하도록
+  * 최소한의 의존성만 남기는 것
+  * 훌륭한 객체지향 설계
+
+### 더 개선 가능함
+
+> bag과 ticketSeller를 개별적으로 선언
+
+```java
+public TicketSeller {
+	public void sellTo(Audience audience) {
+		ticketOffice.plusAmount(audience.by(ticketOffice.getTicket());
+	}
+}
+```
+
+#### 만족스럽지 못한 결과
+
+> 각각으로 분리하는 것이 가장 옳지는 않음
+
+처음에는 없던 의존성들이 생기면서
+
+이에 대해서 높은 결합도를 가지게 됨
+
+→ 이는 어려운 설계를 의미함
+
+### 그래 거짓말이다!
+
+> 실생활의 관람객과 판매자가 → 스스로 자신의 일을 처리
+
+코드에서 Audience와 TicketSeller 역시 스스로 자신을 책임짐
+
+우리가 세상을 바라보는 직관과도 일치
+
+→ 직관을 따르는 코드는 이해하기가 더 쉬운 경향
+
+💡 Theater, Bag, TicketOffice
+
+* 실세계에서 자율적인 존재가 아님
+  * 소극장에 관람객이 입장 → 누군가가 문을 열고 입장을 허가
+* 가방에서 돈을 꺼내는 것
+  * 관람객이지 → 가방이 아님
+* 판매원이 없는데 → 티켓이 자동으로 관람객에게 전달 X
+
+> 현실에서 수동적인 존재가 일단 객체지향의 세계 → 능동적이고 자율적인 존재
+
+레베카 워브스브록 → 능동적이고 자율적인 존재로 소프트웨어 설계
+
+→ 의읜화(anthropomorphism)
+
+💡 객체가 현실 세계의 대상보다 더 많이 안다는 것이 모순적으로 보일 수 있음 결국 인간이라는 에이전트 없이 현실의 전화는 스스로 전화를 걸 수 없음
+
+모든 생물처럼 소프트웨어는 태어나고 → 삶을 영위하고 → 죽음
+
+> 생물처럼 스스로 생각하고 행동하도록 소프트웨어를 설계하는 것
+>
+> 쉬운 코드를 작성하는 것
+
+> 휼륭한 객체지향 설계
+>
+> 소프트웨어를 구성하는 모든 객체들이 자율적으로 행동하는 설계
+>
+> 그 대상이 비록 실세계에서 생명이 없는 수동적인 존재라도
+>
+> 객체지향의 세계로 넘어오는 순간 → 그들은 생명과 지능을 가진 싱싱한 존재
+
+> 이해하기 쉽고 변경하기 쉬운 코드 작성 → 한 편의 애니메이션
+
+* 애니메이션
+  * 코드 안에서
+  * 웃고, 떠들고, 화내는 → 가방 객체
+
+### 4. 객체지향 설계
+
+💡 설계란 코드를 배치하는 것이다.
+
+* 설계가 코드를 작성하는 것 보다 높은 차원이 아님
+  * 설계는 코드를 작성하는 매 순간 코드를 어떻게 배치할 것인지 결정하는 과정
+
+> 설계는 코드 작성의 일부이며 → 코드를 작성하지 않고서는 검증할 수 없음
+
+💡 좋은 설계란 무엇일까?
+
+1. 우리는 오늘 완성해야 하는 기능을 구현하는 코드를 짜야 하는 동시에
+2. 내일 쉽게 변경할 수 있는 코드를 짜야 한다.
+
+> 오늘 요구사항을 온전히 수행하면서 내일의 변경을 매끄럽게 수용할 수 있는 설계
+
+💡 변경을 수용할 수 있는 설계가 중요한 이유
+
+> 오늘의 요구사항과 내일의 요구사항은 다름
+
+개발을 시작하는 시점에 구현에 필요한 모든 요구사항을 수집하는 것은 불가능에 가까움
+
+모든 요구사항을 수집할 수 있다고 가정하더라도
+
+개발이 진행되는 동안 요구사항은 바뀔 수 밖에 없음
+
+> 코드를 변경할 때 버그가 추가될 가능성이 높기 때문
+
+* 코드를 수정하지 앟으면 → 버그는 발생하지 않음
+* 버그의 가장 큰 문제점은 → 코드를 수정하려는 의지를 꺾는다는 것
+
+### 객체지향 설계
+
+> 우리가 진정으로 원하는 것 → 변경에 유연하게 대응할 수 있는 코드
+
+객체지향 프로그래밍은 의존성을 효율적으로 통제할 수 있는 다양한 방법을 제공함으로써
+
+요구사항 변경에 좀 더 수월하게 대응할 수 있는 가능성을 높여줌
+
+> 코드 변경이라는 측면에서는 객체지향이 과거의 다른 방법보다 → 안정감을 줌
+
+> 변경 가능한 코드 → 이해하기 쉬운 코드
+>
+> 어떤 코드를 변경해야 하는데 크 코드를 이해할 수 없다면 어떻겠는가?
+>
+> 그 코드가 변경에 유연하다고 하더라도
+>
+> 아마 코드를 수정하겠다는 마음이 선뜻 들지 않음
+
+#### 객체지향 패러다임
+
+> 세상을 바라보는 방식대로 코드를 작성할 수 있게 도움
+
+세상에 존재하는 모든 자율적인 존재처럼
+
+객체 역시 자신의 데이터를 스스로 책임지는 자율적인 존재
+
+> 여러분이 세상에 대해 예상하는 방식대로 객체가 행동하리라는 것을 보장함으로
+
+코드를 쉽게 이해할 수 있음
+
+> 하지만 데이터와 프로세스를 객체라는 덩어리에 밀어넣는것으로 모든것이 이뤄지지 않음
+
+* 객체들 사이의 상호작용 → 객체 사이의 받는 메시지를 통해서 이루어짐
+
+> 휼륭한 객체지향 설계란 협력하는 객체 사이의 의존서을 적절하게 괸리하는 설계
+
+*   세상에 엮인 것이 많은 사람일수록 변하기 어려운 것처럼
+
+    객체가 주변 환경에 강하게 결합될수록 → 변경하기 어려움
+
+> 데이터와 프로세스를 하나의 덩어리로 모으는 것은 휼륭한 객체지향으로 가는 첫걸음
+>
+> 협력하는 객체들 사이의 의존성을 적절하게 조절 → 변경에 용이한 설계
